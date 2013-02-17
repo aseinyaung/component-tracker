@@ -66,6 +66,7 @@ function label($for, $label = null, $attributes = [])
  */
 function input($type, $name, $value, $attributes = [])
 {
+    $attributes = include_id_attribute($name, $attributes);
     $attributes = attributes($attributes);
     return '<input type="' . $type . '" value="' . $value . '"' . $attributes . '>
            ';
@@ -107,6 +108,7 @@ function number($name, $value = null, $attributes = [])
  */
 function textarea($name, $value = null, $attributes = []) 
 {
+    $attributes = include_id_attribute($name, $attributes);
     $attributes = attributes($attributes);
     return '<textarea name="' . $name . '"' . $attributes . '>' . $value . '</textarea>
            ';
@@ -146,4 +148,20 @@ function attributes($attributes)
         $ret .= ' ' . $k . '="' . $v . '"';
     }
     return $ret;
+}
+
+/**
+ * Check if id attribute exists in the $attributes array. If not include it by
+ * inferring from name attribute. 
+ *
+ * @param  name   $string
+ * @param  array  $attributes
+ * @return string
+ */
+function include_id_attribute($name, $attributes) 
+{
+    if (!array_key_exists('id', $attributes)) {
+        $attributes['id'] = $name;
+    }
+    return $attributes;
 }
