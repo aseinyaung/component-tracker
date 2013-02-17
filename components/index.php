@@ -9,13 +9,16 @@ include '../includes/controller.inc.php';
 include '../includes/view.inc.php';
 include '../includes/html.inc.php';
 
-// If there is a query string, save $_GET array keys to $get array
+// Connect to the database
+$dbh = connect($db_config);
+
+// If there is a query string, save $_GET array keys into $get array
 $get = [null, null];
 if (!empty($_GET)) {
     $get = array_keys($_GET);
 }
 
-// find request method and load appropriate action
+// determine the request method and load appropriate action
 $method = find_request_method();
 load_action($method, $get);
 
@@ -24,7 +27,9 @@ load_action($method, $get);
  */
 function index_action() 
 {
-    echo 'index';
+    $data['components'] = get_table($GLOBALS['dbh'], 'components');
+    $data['page_title'] = 'List Components';
+    load_view('components.index', $data);
 }
 
 /**
