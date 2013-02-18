@@ -61,7 +61,7 @@ function close()
  */
 function label($for, $label = null, $attributes = []) 
 {
-    if (!$label) {
+    if (empty($label)) {
         $exploded = explode('_', $for);
         foreach ($exploded as $exp) {
             $label .= ucfirst($exp) . ' ';
@@ -83,11 +83,16 @@ function label($for, $label = null, $attributes = [])
  * @param  array  $attributes
  * @return string
  */
-function input($type, $name, $value, $attributes = [])
+function input($type, $name, $value = null, $attributes = [])
 {
-    $attributes = include_id_attribute($name, $attributes);
+    if (!array_key_exists('id', $attributes)) {
+        $id = $name;
+    }
+    if (!empty($value)) {
+        $attributes['value'] = $value;
+    }
     $attributes = attributes($attributes);
-    return '<input type="' . $type . '" value="' . $value . '"' . $attributes . '>
+    return '<input type="' . $type . '" name="' . $name . '" id="' . $id . '"' . $attributes . '>
            ';
 }
 
@@ -127,9 +132,11 @@ function number($name, $value = null, $attributes = [])
  */
 function textarea($name, $value = null, $attributes = []) 
 {
-    $attributes = include_id_attribute($name, $attributes);
+    if (!array_key_exists('id', $attributes)) {
+        $id = $name;
+    }
     $attributes = attributes($attributes);
-    return '<textarea name="' . $name . '"' . $attributes . '>' . $value . '</textarea>
+    return '<textarea name="' . $name . '" id="' . $id . '"' . $attributes . '>' . $value . '</textarea>
            ';
 }
 
@@ -143,13 +150,13 @@ function textarea($name, $value = null, $attributes = [])
  */
 function submit($value = null, $name = null, $attributes = []) 
 {
-    $attributes = attributes($attributes);
     if(!empty($value)) {
-        $attributes .= ' value="' . $value . '"';
+        $attributes['value'] = $value;
     }
     if(!empty($name)) {
-        $attributes .= ' name="' . $name . '"';
+        $attributes['name'] = $name;
     }
+    $attributes = attributes($attributes);
     return '<input type="submit"' . $attributes . '>
            ';
 }
@@ -167,20 +174,4 @@ function attributes($attributes)
         $ret .= ' ' . $k . '="' . $v . '"';
     }
     return $ret;
-}
-
-/**
- * Check if id attribute exists in the $attributes array. If not include it by
- * inferring from name attribute. 
- *
- * @param  name   $string
- * @param  array  $attributes
- * @return string
- */
-function include_id_attribute($name, $attributes) 
-{
-    if (!array_key_exists('id', $attributes)) {
-        $attributes['id'] = $name;
-    }
-    return $attributes;
 }
