@@ -6,19 +6,38 @@
 /*
  * Open a form.
  *
+ * By default, the form submits to the current URL with POST method.
+ * For PUT or DELETE methods, add a hidden input with name _method.
+ *
  * @param  string $action
  * @param  string $method
  * @param  array  $attributes
  * @return string
  */
-function open($action = '', $method = 'GET', $attributes = []) 
+function open($action = null, $method = 'post', $attributes = []) 
 {
-    if ($method != 'GET' || $method != 'POST') {
-        $method = 'GET';
+    if (!empty($action)) {
+        $action = ' action="' . $action . '"';
+    } else {
+        $action = '';
     }
+
+    if (!in_array($method, ['get', 'post', 'put', 'delete'])) {
+        $method = 'post';
+    }
+
+    if ($method == 'put' || $method == 'delete') {
+        $method = 'post';
+        $hidden_input = '<input type="hidden" name="_method" value="' . $method . '">
+                        ';
+    } else {
+        $hidden_input = '';
+    }
+
     $attributes = attributes($attributes);
-    return '<form action="' . $action . '" method="' . $method . '"' . $attributes . '>
-           ';
+
+    return '<form' . $action . ' method="' . $method . '"' . $attributes . '>
+           ' . $hidden_input;
 }
 
 /*
