@@ -17,9 +17,9 @@
 </div>
 
 <div class="control-group">
-    <?= label('comments', null, ['class' => 'control-label'] ) ?>
+    <?= label('notes', null, ['class' => 'control-label'] ) ?>
     <div class="controls">
-        <?= textarea('comments', null, ['rows' => 10]) ?>
+        <?= textarea('notes', null, ['rows' => 10]) ?>
     </div>
 </div>
 

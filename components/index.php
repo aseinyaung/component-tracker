@@ -47,7 +47,25 @@ function new_action()
  */
 function create_action() 
 {
-    echo 'create';
+    $sql = 'INSERT INTO 
+            components(name, description, notes, quantity_on_hand, quantity_on_order, reorder_level)
+            VALUES(:name, :description, :notes, :quantity_on_hand, :quantity_on_order, :reorder_level)';
+    $r = execute($GLOBALS['dbh'],
+                $sql,
+                [
+                    ':name'              => $_POST['name'],
+                    ':description'       => $_POST['description'],
+                    ':notes'             => $_POST['notes'],
+                    ':quantity_on_hand'  => $_POST['quantity_on_hand'],
+                    ':quantity_on_order' => $_POST['quantity_on_order'],
+                    ':reorder_level'     => $_POST['reorder_level']
+                ]);
+    if ($r === true) {
+        header('Location: .');
+    } else {
+        $data['error'] = ['There was a problem adding the component into the database.'];
+        load_view('templates.error', $data);
+    }    
 }
 
 /**
