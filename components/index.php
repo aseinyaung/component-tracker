@@ -8,6 +8,7 @@ include '../includes/db.inc.php';
 include '../includes/controller.inc.php';
 include '../includes/view.inc.php';
 include '../includes/html.inc.php';
+include '../includes/form.inc.php';
 
 // Connect to the database
 $dbh = connect($db_config);
@@ -28,7 +29,7 @@ load_action($method, $get);
 function index_action() 
 {
     $data['components'] = get_table($GLOBALS['dbh'], 'components');
-    $data['page_title'] = 'List Components';
+    $data['page_title'] = 'Listing Components';
     load_view('components.index', $data);
 }
 
@@ -37,7 +38,8 @@ function index_action()
  */
 function new_action() 
 {
-    echo 'new';
+    $data['page_title'] = 'New Component';
+    load_view('components.new', $data);
 }
 
 /**
