@@ -9,6 +9,7 @@ include '../includes/controller.inc.php';
 include '../includes/view.inc.php';
 include '../includes/html.inc.php';
 include '../includes/form.inc.php';
+include '../includes/validator.inc.php';
 
 // Connect to the database
 $dbh = connect($db_config);
@@ -38,6 +39,16 @@ function index_action()
  */
 function new_action() 
 {
+    $data['name'] 
+    = $data['description'] 
+    = $data['notes'] 
+    = '';
+
+    $data['quantity_on_hand'] 
+    = $data['quantity_on_order'] 
+    = $data['reorder_level'] 
+    = 0;
+
     $data['page_title'] = 'New Component';
     load_view('components.new', $data);
 }
@@ -47,6 +58,25 @@ function new_action()
  */
 function create_action() 
 {
+    // Validates form fields.
+    $errors = [];
+    validates('name', ['presence' => true, 'length' => ['maximum' => 225]], $errors);
+    validates('quantity_on_hand', ['presence' => true], $errors);
+    validates('quantity_on_order', ['presence' => true], $errors);
+    validates('reorder_level', ['presence' => true], $errors);
+    
+    // If validation fails
+    if (!empty($errors)) {
+        foreach ($_POST as $k => $v) {
+            $data[$k] = $v;
+        }
+        $data['errors'] = $errors;
+        $data['page_title'] = 'New Component';
+        load_view('components.new', $data);
+        exit();
+    }
+
+    // If validation passes, insert into database
     $sql = 'INSERT INTO 
             components(name, description, notes, quantity_on_hand, quantity_on_order, reorder_level)
             VALUES(:name, :description, :notes, :quantity_on_hand, :quantity_on_order, :reorder_level)';
@@ -67,7 +97,7 @@ function create_action()
         load_view('templates.error', $data);
     }    
 }
-
+    
 /**
  * Show action
  */
