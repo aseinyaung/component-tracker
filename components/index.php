@@ -109,9 +109,29 @@ function show_action()
 /**
  * Edit action
  */
-function edit_action() 
+function edit_action($id) 
 {
-    echo 'edit';
+    $sql = 'SELECT * FROM components WHERE id = :id';
+    $r = query($GLOBALS['dbh'],
+                $sql,
+                [':id' => $id]
+        );
+
+    if ($r) {
+        $data['name'] = $r[0]['name'];
+        $data['description'] = $r[0]['description'];
+        $data['notes'] = $r[0]['notes'];
+
+        $data['quantity_on_hand'] =  $r[0]['quantity_on_hand'];
+        $data['quantity_on_order'] =  $r[0]['quantity_on_order'];
+        $data['reorder_level'] =  $r[0]['reorder_level'];
+
+        $data['page_title'] = 'Edit Component';
+        load_view('components.edit', $data);
+    } else {
+        $data['error'] = ['The specified component does not exist.'];
+        load_view('templates.error', $data);
+    } 
 }
 
 /**

@@ -46,7 +46,7 @@ function load_action($method, $get) {
     } 
     // GET - /components/?:id&edit
     elseif ($method == 'GET' && is_numeric($get[0]) && $get[1] == 'edit') {
-        edit_action();
+        edit_action($get[0]);
     } 
     // PUT - /components/?:id
     elseif ($method == 'PUT' && is_numeric($get[0])) {

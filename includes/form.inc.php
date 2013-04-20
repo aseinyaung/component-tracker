@@ -27,9 +27,9 @@ function open($action = null, $method = 'post', $attributes = [])
     }
 
     if ($method == 'put' || $method == 'delete') {
-        $method = 'post';
-        $hidden_input = '<input type="hidden" name="_method" value="' . $method . '">
+        $hidden_input = '<input type="hidden" name="_method" value="' . strtoupper($method) . '">
                         ';
+        $method = 'post';
     } else {
         $hidden_input = '';
     }
