@@ -118,13 +118,14 @@ function edit_action($id)
         );
 
     if ($r) {
-        $data['name'] = $r[0]['name'];
-        $data['description'] = $r[0]['description'];
-        $data['notes'] = $r[0]['notes'];
+        $data['id']             = $r[0]['id'];
+        $data['name']           = $r[0]['name'];
+        $data['description']    = $r[0]['description'];
+        $data['notes']          = $r[0]['notes'];
 
-        $data['quantity_on_hand'] =  $r[0]['quantity_on_hand'];
-        $data['quantity_on_order'] =  $r[0]['quantity_on_order'];
-        $data['reorder_level'] =  $r[0]['reorder_level'];
+        $data['quantity_on_hand']   =  $r[0]['quantity_on_hand'];
+        $data['quantity_on_order']  =  $r[0]['quantity_on_order'];
+        $data['reorder_level']      =  $r[0]['reorder_level'];
 
         $data['page_title'] = 'Edit Component';
         load_view('components.edit', $data);
@@ -137,9 +138,48 @@ function edit_action($id)
 /**
  * Update action
  */
-function update_action() 
+function update_action($id) 
 {
-    echo 'update';
+    // Validates form fields.
+    $errors = [];
+    validates('name', ['presence' => true, 'length' => ['maximum' => 225]], $errors);
+    validates('quantity_on_hand', ['presence' => true], $errors);
+    validates('quantity_on_order', ['presence' => true], $errors);
+    validates('reorder_level', ['presence' => true], $errors);
+    
+    // If validation fails
+    if (!empty($errors)) {
+        foreach ($_POST as $k => $v) {
+            $data[$k] = $v;
+        }
+        $data['errors'] = $errors;
+        $data['page_title'] = 'Edit Component';
+        load_view('components.edit', $data);
+        exit();
+    }
+
+    // If validation passes, insert into database
+    $sql = 'UPDATE components 
+            SET name = :name, description = :description, notes = :notes, 
+            quantity_on_hand = :quantity_on_hand, quantity_on_order = :quantity_on_order, reorder_level = :reorder_level
+            WHERE id = :id';
+    $r = execute($GLOBALS['dbh'],
+                $sql,
+                [
+                    ':name'              => $_POST['name'],
+                    ':description'       => $_POST['description'],
+                    ':notes'             => $_POST['notes'],
+                    ':quantity_on_hand'  => $_POST['quantity_on_hand'],
+                    ':quantity_on_order' => $_POST['quantity_on_order'],
+                    ':reorder_level'     => $_POST['reorder_level'],
+                    ':id'                => $id
+                ]);
+    if ($r === true) {
+        header('Location: .');
+    } else {
+        $data['error'] = ['There was a problem editing the component.'];
+        load_view('templates.error', $data);
+    }
 }
 
 /**

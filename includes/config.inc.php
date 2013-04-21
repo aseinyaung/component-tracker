@@ -4,7 +4,7 @@ $db_config = [
     'driver'   => 'mysql',
     'host'     => 'localhost',
     'dbname'   => 'component_tracker',
-    'username' => 'development_user',
-    'password' => 'development_pass',
+    'username' => 'root',
+    'password' => 'rootpass',
     'charset'  => 'utf8'
 ];

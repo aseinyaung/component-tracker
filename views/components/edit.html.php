@@ -8,7 +8,7 @@
     </div>
 <?php endif; ?>
 
-<?= open('.?3', 'put', ['class' => 'form-horizontal']) ?>
+<?= open('.?' . $id, 'put', ['class' => 'form-horizontal']) ?>
 
 <div class="control-group">
     <?= label('name', null, ['class' => 'control-label'] ) ?>

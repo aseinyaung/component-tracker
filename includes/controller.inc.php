@@ -50,7 +50,7 @@ function load_action($method, $get) {
     } 
     // PUT - /components/?:id
     elseif ($method == 'PUT' && is_numeric($get[0])) {
-        update_action();
+        update_action($get[0]);
     }
     // DELETE - /components/?:id
     elseif ($method == 'DELETE' && is_numeric($get[0])) {
