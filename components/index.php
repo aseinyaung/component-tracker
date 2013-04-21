@@ -3,13 +3,7 @@
  * Components controller
  */
 
-include '../includes/config.inc.php';
-include '../includes/db.inc.php';
-include '../includes/controller.inc.php';
-include '../includes/view.inc.php';
-include '../includes/html.inc.php';
-include '../includes/form.inc.php';
-include '../includes/validator.inc.php';
+include '../includes/includes.inc.php';
 
 // Connect to the database
 $dbh = connect($db_config);
